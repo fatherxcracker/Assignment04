@@ -3,12 +3,16 @@ package com.example.mvcapplication.views;
 
 import com.example.mvcapplication.controllers.EmployeeController;
 import com.example.mvcapplication.models.Employee;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmployeeView extends VBox {
     private final TableView<Employee> tableView;
@@ -30,13 +34,17 @@ public class EmployeeView extends VBox {
         this.bindTableData();
 
         searchButton.setOnAction(buttonEvent -> {
-            createTable();
-            String firstNameInput = searchTF.getText();
-            ArrayList<Employee> employeeArrayList = new ArrayList<>();
-
-            for (int i = 0; i < tableView.getItems().size(); i++) {
-                if (tableView.getItems().get(i).firstNameProperty().equals(firstNameInput));
+            if (searchTF.getText().isEmpty()) {
+                bindTableData();
+                return;
             }
+
+            String firstNameInput = searchTF.getText();
+            List<Employee> employeeList = controller.getEmployees();
+
+            List<Employee> employeeListFiltered = employeeList.stream().filter(employee -> employee.firstNameProperty().getValue().contains(firstNameInput)).toList();
+
+            tableView.setItems(FXCollections.observableArrayList(employeeListFiltered));
         });
     }
 
