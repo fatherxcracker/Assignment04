@@ -2,14 +2,21 @@ package com.example.mvcapplication.views;
 
 
 import com.example.mvcapplication.controllers.EmployeeController;
+import com.example.mvcapplication.models.Department;
 import com.example.mvcapplication.models.Employee;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,13 +34,17 @@ public class EmployeeView extends VBox {
         Button searchButton = new Button("Search");
 
         HBox searchBox = new HBox();
-        searchBox.getChildren().addAll(searchLabel, searchTF, searchButton);
+        Button projectButton = new Button("See Project");
+        Button departmentButton = new Button("See Departments");
+
+        searchBox.getChildren().addAll(searchLabel, searchTF, searchButton, projectButton, departmentButton);
 
         this.createTable();
         this.getChildren().addAll(searchBox, tableView);
         this.bindTableData();
 
         setupSearchButton(searchButton, searchTF);
+        departmentButton.setOnAction(event -> openDepartmentWindow());
     }
 
     private void setupSearchButton(Button searchButton, TextField searchTF) {
@@ -69,5 +80,30 @@ public class EmployeeView extends VBox {
 
     private void bindTableData() {
         tableView.setItems(controller.getEmployees());
+    }
+
+    private void openDepartmentWindow() {
+        Stage departmentWindow = new Stage();
+        departmentWindow.setTitle("Department Data");
+
+        //Department Table
+        TableView<Department> departmentTableView = new TableView<>();
+
+        TableColumn<Department, Integer> idCol = new TableColumn<>("Department ID");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("departmentId"));
+
+        TableColumn<Department, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
+
+        departmentTableView.getColumns().addAll(idCol, nameCol);
+
+        //bind Department Table
+        departmentTableView.setItems(controller.getDepartments());
+
+        VBox vBox = new VBox(departmentTableView);
+        Scene scene = new Scene(vBox, 400, 300);
+
+        departmentWindow.setScene(scene);
+        departmentWindow.showAndWait();
     }
 }
