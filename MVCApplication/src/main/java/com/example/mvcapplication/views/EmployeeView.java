@@ -33,19 +33,25 @@ public class EmployeeView extends VBox {
         this.getChildren().addAll(searchBox, tableView);
         this.bindTableData();
 
-        searchButton.setOnAction(buttonEvent -> {
-            if (searchTF.getText().isEmpty()) {
-                bindTableData();
-                return;
-            }
+        setupSearchButton(searchButton, searchTF);
+    }
 
-            String firstNameInput = searchTF.getText();
-            List<Employee> employeeList = controller.getEmployees();
+    private void setupSearchButton(Button searchButton, TextField searchTF) {
+        searchButton.setOnAction(event -> handleSearch(searchTF.getText()));
+    }
 
-            List<Employee> employeeListFiltered = employeeList.stream().filter(employee -> employee.firstNameProperty().getValue().contains(firstNameInput)).toList();
+    private void handleSearch(String firstNameInput) {
+        if (firstNameInput == null || firstNameInput.isEmpty()) {
+            bindTableData();
+            return;
+        }
 
-            tableView.setItems(FXCollections.observableArrayList(employeeListFiltered));
-        });
+        List<Employee> employeeList = controller.getEmployees();
+        List<Employee> filteredList = employeeList.stream()
+                .filter(e -> e.firstNameProperty().getValue().contains(firstNameInput))
+                .toList();
+
+        tableView.setItems(FXCollections.observableArrayList(filteredList));
     }
 
     private void createTable() {
