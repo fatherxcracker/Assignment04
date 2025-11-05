@@ -44,7 +44,8 @@ public class EmployeeView extends VBox {
         this.bindTableData();
 
         setupSearchButton(searchButton, searchTF);
-        departmentButton.setOnAction(event -> openDepartmentWindow());
+        departmentButton.setOnAction(event -> controller.openDepartmentWindow());
+        projectButton.setOnAction(event -> controller.openProjectWindow());
     }
 
     private void setupSearchButton(Button searchButton, TextField searchTF) {
@@ -80,30 +81,5 @@ public class EmployeeView extends VBox {
 
     private void bindTableData() {
         tableView.setItems(controller.getEmployees());
-    }
-
-    private void openDepartmentWindow() {
-        Stage departmentWindow = new Stage();
-        departmentWindow.setTitle("Department Data");
-
-        //Department Table
-        TableView<Department> departmentTableView = new TableView<>();
-
-        TableColumn<Department, Integer> idCol = new TableColumn<>("Department ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("departmentId"));
-
-        TableColumn<Department, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("departmentName"));
-
-        departmentTableView.getColumns().addAll(idCol, nameCol);
-
-        //bind Department Table
-        departmentTableView.setItems(controller.getDepartments());
-
-        VBox vBox = new VBox(departmentTableView);
-        Scene scene = new Scene(vBox, 400, 300);
-
-        departmentWindow.setScene(scene);
-        departmentWindow.showAndWait();
     }
 }

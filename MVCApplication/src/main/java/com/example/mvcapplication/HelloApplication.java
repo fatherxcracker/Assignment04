@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
         EmployeeController controller = new EmployeeController();
         EmployeeView view = new EmployeeView(controller);
 
-        Scene scene = new Scene(view, 400, 300);
+        Scene scene = new Scene(view, 470, 300);
 
         stage.setTitle("Employee Table (MVC)");
         stage.setScene(scene);
