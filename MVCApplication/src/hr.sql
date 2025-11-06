@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2025 at 05:26 PM
+-- Generation Time: Nov 06, 2025 at 07:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -52,16 +52,17 @@ CREATE TABLE `employee` (
   `firstName` varchar(50) DEFAULT NULL,
   `lastName` varchar(50) DEFAULT NULL,
   `salary` double DEFAULT NULL,
-  `departmentId` int(11) DEFAULT NULL
+  `departmentId` int(11) DEFAULT NULL,
+  `projectId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employee`
 --
 
-INSERT INTO `employee` (`id`, `firstName`, `lastName`, `salary`, `departmentId`) VALUES
-(1, 'James', 'Luciano', 70000, 1),
-(2, 'Jodel', 'Santos', 80000, 2);
+INSERT INTO `employee` (`id`, `firstName`, `lastName`, `salary`, `departmentId`, `projectId`) VALUES
+(1, 'James', 'Luciano', 70000, 1, 1),
+(2, 'Jodel', 'Santos', 80000, 2, 3);
 
 -- --------------------------------------------------------
 
@@ -99,7 +100,8 @@ ALTER TABLE `department`
 --
 ALTER TABLE `employee`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `departmentId` (`departmentId`);
+  ADD KEY `departmentId` (`departmentId`),
+  ADD KEY `fk_project` (`projectId`);
 
 --
 -- Indexes for table `project`
@@ -137,7 +139,8 @@ ALTER TABLE `project`
 -- Constraints for table `employee`
 --
 ALTER TABLE `employee`
-  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`departmentId`) REFERENCES `department` (`id`);
+  ADD CONSTRAINT `employee_ibfk_1` FOREIGN KEY (`departmentId`) REFERENCES `department` (`id`),
+  ADD CONSTRAINT `fk_project` FOREIGN KEY (`projectId`) REFERENCES `project` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

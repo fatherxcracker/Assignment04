@@ -12,13 +12,15 @@ public class Employee {
     private final StringProperty lastName;
     private final DoubleProperty salary;
     private final IntegerProperty departmentId;
+    private final IntegerProperty projectId;
 
-    public Employee(int id, String firstName, String lastName, double salary, int departmentId) {
+    public Employee(int id, String firstName, String lastName, double salary, int departmentId, int projectId) {
         this.id = new SimpleIntegerProperty(id);
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.salary = new SimpleDoubleProperty(salary);
         this.departmentId = new SimpleIntegerProperty(departmentId);
+        this.projectId = new SimpleIntegerProperty(projectId);
     }
 
     public IntegerProperty idProperty() {
@@ -41,6 +43,10 @@ public class Employee {
         return departmentId;
     }
 
+    public IntegerProperty projectIdProperty() {
+        return projectId;
+    }
+
     public static ObservableList<Employee> getAllEmployees() {
         ObservableList<Employee> employeeData = FXCollections.observableArrayList();
         String query = "SELECT * FROM employee";
@@ -55,8 +61,9 @@ public class Employee {
                 String lastName = rs.getString("lastName");
                 double salary = rs.getDouble("salary");
                 int departmentId = rs.getInt("departmentId");
+                int projectId = rs.getInt("projectId");
 
-                employeeData.add(new Employee(id, firstName, lastName, salary, departmentId));
+                employeeData.add(new Employee(id, firstName, lastName, salary, departmentId, projectId));
             }
 
         } catch (SQLException e) {
