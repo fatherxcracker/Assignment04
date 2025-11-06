@@ -34,7 +34,7 @@ public class EmployeeView extends VBox {
         Button searchButton = new Button("Search");
 
         HBox searchBox = new HBox();
-        Button projectButton = new Button("See Project");
+        Button projectButton = new Button("See Projects");
         Button departmentButton = new Button("See Departments");
 
         searchBox.getChildren().addAll(searchLabel, searchTF, searchButton, projectButton, departmentButton);
