@@ -1,8 +1,10 @@
 package com.example.mvcapplication.models;
 
-import javafx.beans.property.*;
+import com.example.mvcapplication.database.ConnectionManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.beans.property.*;
+import java.sql.*;
 
 public class Employee {
     private final IntegerProperty id;
@@ -38,12 +40,29 @@ public class Employee {
     public IntegerProperty departmentIdProperty() {
         return departmentId;
     }
-    public static ObservableList<Employee> getAllEmployees(){
-        ObservableList<Employee> employeeData = FXCollections.observableArrayList(
-                new Employee(1, "John", "Doe", 60000.00, 101),
-                new Employee(2, "Jane", "Smith", 75000.00, 102),
-                new Employee(3, "Peter", "Jones", 85000.00, 101)
-        );
+
+    public static ObservableList<Employee> getAllEmployees() {
+        ObservableList<Employee> employeeData = FXCollections.observableArrayList();
+        String query = "SELECT * FROM employee";
+
+        try (Connection con = ConnectionManager.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String firstName = rs.getString("firstName");
+                String lastName = rs.getString("lastName");
+                double salary = rs.getDouble("salary");
+                int departmentId = rs.getInt("departmentId");
+
+                employeeData.add(new Employee(id, firstName, lastName, salary, departmentId));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return employeeData;
     }
 

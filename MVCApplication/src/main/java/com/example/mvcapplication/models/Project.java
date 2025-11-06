@@ -1,11 +1,13 @@
 package com.example.mvcapplication.models;
 
+import com.example.mvcapplication.database.ConnectionManager;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.sql.*;
 
 public class Project {
     private final IntegerProperty projectId;
@@ -33,11 +35,23 @@ public class Project {
     }
 
     public static ObservableList<Project> getAllProjects() {
-        ObservableList<Project> projectData = FXCollections.observableArrayList(
-                new Project(1, "Rising Phoenix"),
-                new Project(2, "Quantum Leap"),
-                new Project(3, "Alpha Ambition")
-        );
+        ObservableList<Project> projectData = FXCollections.observableArrayList();
+        String query = "SELECT * FROM project";
+
+        try (Connection con = ConnectionManager.getConnection();
+             Statement stmt = con.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                projectData.add(new Project(id, name));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return projectData;
     }
 }
